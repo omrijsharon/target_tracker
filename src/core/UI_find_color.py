@@ -71,7 +71,7 @@ def show_frame():
     upper = standardize_hsv(hue + hue_range, saturation + saturation_range, value + value_range)
     masked_img = process_frame(frame, lower, upper)
 
-    img = Image.fromarray(masked_img).resize((640, 480))
+    img = Image.fromarray(masked_img[:, :, ::-1]).resize((640, 480))
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
