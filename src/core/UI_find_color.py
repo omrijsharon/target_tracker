@@ -45,5 +45,29 @@ value_range_scl = Scale(root, from_=0, to=255, orient=HORIZONTAL, length=300)
 value_range_scl.set(0)
 value_range_scl.grid(row=row+7, column=1, pady=4, padx=4)
 
+mainFrame = Frame(root)
+mainFrame.place(x=20, y=20)
 
+#Capture video frames
+lmain = Label(root)
+lmain.grid(row=row+8, column=1, pady=4, padx=4)
+
+cap = cv2.VideoCapture(0)
+
+
+def show_frame():
+    ret, frame = cap.read()
+    hue = hue_scl.get()
+    hue_range = hue_range_scl.get()
+
+    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+
+    img = Image.fromarray(cv2image).resize((760, 400))
+    imgtk = ImageTk.PhotoImage(image=img)
+    lmain.imgtk = imgtk
+    lmain.configure(image=imgtk)
+    lmain.after(10, show_frame)
+jkl
+
+show_frame()  #Display
 root.mainloop()
