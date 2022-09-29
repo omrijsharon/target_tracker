@@ -3,6 +3,10 @@ from tkinter import ttk
 from tkinter.ttk import Frame
 from PIL import Image, ImageTk
 import cv2
+import numpy as np
+
+from utils.helper_functions import standardize_hsv
+from utils.image_processing import process_frame
 
 root = Tk()
 root.geometry("640x780")
@@ -59,15 +63,20 @@ def show_frame():
     ret, frame = cap.read()
     hue = hue_scl.get()
     hue_range = hue_range_scl.get()
+    saturation = saturation_scl.get()
+    saturation_range = saturation_range_scl.get()
+    value = value_scl.get()
+    value_range = value_range_scl.get()
+    lower = standardize_hsv(hue - hue_range, saturation - saturation_range, value - value_range)
+    upper = standardize_hsv(hue + hue_range, saturation + saturation_range, value + value_range)
+    masked_img = process_frame(frame, lower, upper)
 
-    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
-
-    img = Image.fromarray(cv2image).resize((760, 400))
+    img = Image.fromarray(masked_img).resize((640, 480))
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     lmain.after(10, show_frame)
-jkl
+
 
 show_frame()  #Display
 root.mainloop()
