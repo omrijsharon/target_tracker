@@ -67,7 +67,7 @@ def show_frame():
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     lmain.after(10, show_frame)
-
+jkl
 
 show_frame()  #Display
 root.mainloop()
