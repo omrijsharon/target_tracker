@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import yaml
 
 
 def mask_color_from_HSV(hsv, lower, upper):
@@ -35,3 +36,12 @@ def top_n_regions(regions, n=3):
     #         for
     #         top_n_regions[0] = region
     # return top_n_regions
+
+def yaml_reader(path):
+    with open(path) as f:
+        data = yaml.load(f, Loader=yaml.FullLoader)
+    return data
+
+if __name__ == '__main__':
+    data = yaml_reader(r'C:\Users\linta\PycharmProjects\target_tracker\src\config\ui_canny_edge_detection.yaml')
+    print(data)

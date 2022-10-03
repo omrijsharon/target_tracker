@@ -1,0 +1,17 @@
+lowThreshold:
+  name: "Low Threshold"
+  from: 0
+  to: 100
+  default: 50
+
+ratio:
+  name: "Ratio"
+  from: 0
+  to: 100
+  default: 50
+
+kernel_size:
+  name: "Kernel Size"
+  from: 0
+  to: 100
+  default: 50
