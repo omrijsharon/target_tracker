@@ -11,7 +11,7 @@ max_lowThreshold = 100
 
 
 def process_frame(frame):
-    CannyThreshold(frame)
+    cv2.imshow('Edge Map', CannyThreshold(frame))
     # cv2.imshow('frame', frame)
     return cv2.waitKey(1) & 0xFF == ord('q')
 
@@ -46,7 +46,7 @@ def CannyThreshold(src, lowThreshold=100, ratio=3, kernel_size=3):
     detected_edges = cv2.Canny(img_blur, lowThreshold, lowThreshold * ratio, kernel_size)
     mask = detected_edges != 0
     dst = src * (mask[:, :, None].astype(src.dtype))
-    cv2.imshow('Edge Map', dst)
+    return dst
 
 # parser = argparse.ArgumentParser(description='Code for Canny Edge Detector tutorial.')
 # parser.add_argument('--input', help='Path to input image.', default='fruits.jpg')

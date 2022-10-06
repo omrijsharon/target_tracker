@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import argparse
 
+from core.screen_capture import CannyThreshold
 from utils.helper_functions import yaml_reader
 
 
@@ -69,6 +70,11 @@ def show_frame():
     else:
         img_byte = sct.grab(monitor)
         frame = np.frombuffer(img_byte.rgb, np.uint8).reshape(monitor["height"], monitor["width"], 3)[:, :, ::-1]
+
+    lowThreshold = params.get('lowThreshold')["scale"].get()
+    ratio = params.get('ratio')["scale"].get()
+    kernel_size = params.get('kernel_size')["scale"].get()
+    frame = CannyThreshold(frame, lowThreshold, ratio, kernel_size)  # LIN - change to general func
     img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
