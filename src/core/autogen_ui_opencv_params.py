@@ -9,8 +9,9 @@ import cv2
 import numpy as np
 import argparse
 
-from core.screen_capture import CannyThreshold
+from core.screen_capture import cannyThreshold
 from utils.helper_functions import yaml_reader
+from utils.image_processing import regions_process
 
 
 def dir_path(string):
@@ -21,12 +22,13 @@ def dir_path(string):
 
 
 def source_change(string):
-    if string == "webcam" or string == 0:
+    if string == "camera" or string == "webcam" or string == 0:
         return 0
     elif string == "screen" or string == "monitor":
         return 1
     else:
         return dir_path(string)
+
 
 parser = argparse.ArgumentParser(description='Auto generates UI from config file.')
 parser.add_argument('--param_config_path', type=dir_path, help='Path to config params.', default='ui.yaml')
@@ -64,21 +66,37 @@ else:
     }
 
 
-def show_frame():
+def get_frame():
     if args.source != 1:
         ret, frame = cap.read()
     else:
         img_byte = sct.grab(monitor)
         frame = np.frombuffer(img_byte.rgb, np.uint8).reshape(monitor["height"], monitor["width"], 3)[:, :, ::-1]
+    return frame
 
+
+def canny_process_frame(frame):
     lowThreshold = params.get('lowThreshold')["scale"].get()
     ratio = params.get('ratio')["scale"].get()
     kernel_size = params.get('kernel_size')["scale"].get()
-    frame = CannyThreshold(frame, lowThreshold, ratio, kernel_size)  # LIN - change to general func
+    frame = cannyThreshold(frame, lowThreshold, ratio, kernel_size)  # LIN - change to general func
+    return frame
+
+
+def format_frame(frame):
+    return (np.repeat(np.expand_dims(255*frame, axis=2), 3, axis=2)).astype(np.uint8)
+
+
+def show_frame():
+    base_frame = get_frame()
+    canny_frame = canny_process_frame(base_frame)
+    n_bbox = params.get('n_bbox')["scale"].get()
+    frame = regions_process(canny_frame, base_frame, n_bbox)
     img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
+    # lmain.after(10, show_frame, processed_frame_1)
     lmain.after(10, show_frame)
 
 

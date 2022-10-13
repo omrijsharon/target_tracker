@@ -25,3 +25,19 @@ def process_frame(frame, lower, upper, kernel_size=11, n_bbox=3):
     for box in bbox:
         cv2.rectangle(masked_img, (box[1], box[0]), (box[3], box[2]), (0, 255, 0), 2)
     return masked_img
+
+
+def regions_process(mask, frame, n_bbox=3):
+    regions_mask = np.zeros(shape=frame.shape[:2], dtype=np.uint8)
+    labels = measure.label(mask, return_num=True, connectivity=2, background=0)
+    # frame[np.argwhere(labels)==6]
+    regions = measure.regionprops(labels[0])
+    max_area_regions = top_n_regions(regions, n_bbox)
+    # bbox = [region.bbox for region in max_area_regions]
+    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+    for region in max_area_regions:
+        regions_mask[tuple(region.coords.T)] = 1
+    frame = cv2.bitwise_and(frame, frame, mask=regions_mask)
+    # for box in bbox:
+    #     cv2.rectangle(frame, (box[1], box[0]), (box[3], box[2]), (0, 255, 0), 2)
+    return frame

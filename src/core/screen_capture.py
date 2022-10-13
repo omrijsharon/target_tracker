@@ -40,12 +40,13 @@ def main(process_func, monitor_number=0):
         # print(counter / t_diff)
 
 
-def CannyThreshold(src, lowThreshold=100, ratio=3, kernel_size=3):
+def cannyThreshold(src, lowThreshold=100, ratio=3, kernel_size=3):
     src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
     img_blur = cv2.blur(src_gray, (3, 3))
     detected_edges = cv2.Canny(img_blur, lowThreshold, lowThreshold * ratio, kernel_size)
     mask = detected_edges != 0
-    dst = src * (mask[:, :, None].astype(src.dtype))
+    # dst = src * (mask[:, :, None].astype(src.dtype))
+    dst = mask
     return dst
 
 # parser = argparse.ArgumentParser(description='Code for Canny Edge Detector tutorial.')
