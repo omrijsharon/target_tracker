@@ -42,6 +42,9 @@ def yaml_reader(path):
         data = yaml.load(f, Loader=yaml.FullLoader)
     return data
 
+def np_array_to_cv_array(np_array):
+    return np_array.astype(np.uint8)
+
 if __name__ == '__main__':
     data = yaml_reader(r'C:\Users\linta\PycharmProjects\target_tracker\src\config\ui_canny_edge_detection.yaml')
     print(data)
