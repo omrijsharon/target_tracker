@@ -89,7 +89,7 @@ def format_frame(frame):
 
 def show_frame():
     base_frame = get_frame()
-    canny_frame = canny_process_frame(base_frame)
+    canny_frame = 1-canny_process_frame(base_frame)
     n_bbox = params.get('n_bbox')["scale"].get()
     frame = regions_process(canny_frame, base_frame, n_bbox)
     img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])

@@ -19,5 +19,5 @@ kernel_size:
 n_bbox:
   name: "Num of Bounding Boxes"
   from: 0
-  to: 20
+  to: 100
   default: 3
