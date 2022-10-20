@@ -3,6 +3,7 @@ import numpy as np
 import mss
 import mss.tools
 
+from fractal_filter import image_fractal, fractalize
 from utils.helper_functions import np_array_to_cv_array
 
 top_left_corner = []
@@ -27,6 +28,9 @@ cv2.createTrackbar("Threshold1", "Parameters", 23, 255, empty)
 cv2.createTrackbar("Threshold2", "Parameters", 23, 255, empty)
 cv2.createTrackbar("Area", "Parameters", 1000, 1000, empty)
 cv2.createTrackbar("KernelSize", "Parameters", 5, 20, empty)
+cv2.createTrackbar("Scaling_1", "Parameters", 3, 51, empty)
+cv2.createTrackbar("Scaling_2", "Parameters", 5, 51, empty)
+
 
 
 def get_custom_kernel(action, x, y, flags, *userdata):
@@ -144,7 +148,7 @@ def getContours(img):
 with mss.mss() as sct:
     # img = fromScreen()
     cv2.namedWindow("Stack")
-    cv2.setMouseCallback("Stack", get_custom_kernel)
+    # cv2.setMouseCallback("Stack", get_custom_kernel)
     while True:
         # success, img = cap.read()
         mon = sct.monitors[0]
@@ -158,6 +162,9 @@ with mss.mss() as sct:
         kernel_size = cv2.getTrackbarPos("KernelSize", "Parameters")
         kernel = np.ones((kernel_size, kernel_size))
         imgDil = cv2.dilate(imgCanny, kernel, iterations=1)
+        s_1 = cv2.getTrackbarPos("Scaling_1", "Parameters")
+        s_2 = cv2.getTrackbarPos("Scaling_2", "Parameters")
+        imgFractled = image_fractal(fractalize(imgCanny,[s_1,s_2]))
         imgFiltered = cv2.filter2D(imgDil,cv2.CV_64F,custom_kernel)
         imgFiltered /= imgFiltered.max()
         imgFiltered *= 255
@@ -165,9 +172,9 @@ with mss.mss() as sct:
         getContours(imgDil)
 
         imgBlank = np.zeros_like(img)
-        imgStack = stackImages(1.0, ([img, custom_kernel_img, imgCanny],
-                                     [imgDil, imgContour, imgFiltered]))
-
+        # imgStack = stackImages(0.5, ([img, custom_kernel_img, imgCanny],
+        #                              [imgFractled, imgContour, imgFiltered]))
+        imgStack = stackImages(0.5, ([img, imgFractled, imgDil]))
         cv2.imshow("Stack", imgStack)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
