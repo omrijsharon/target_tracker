@@ -4,7 +4,7 @@ import mss
 import mss.tools
 
 from fractal_filter import image_fractal, fractalize
-from utils.helper_functions import np_array_to_cv_array
+from utils.helper_functions import np_to_cv
 
 top_left_corner = []
 bottom_right_corner = []
@@ -54,7 +54,7 @@ def get_custom_kernel(action, x, y, flags, *userdata):
         custom_kernel_img[top_left_corner[0][1]:bottom_right_corner[0][1],
                         top_left_corner[0][0]:bottom_right_corner[0][0]] = custom_kernel
         custom_kernel = custom_kernel / (diff_x * diff_y)
-        # cv2.rectangle(np_array_to_cv_array(img), top_left_corner[0], bottom_right_corner[0], (0, 255, 0), 2, 8)
+        # cv2.rectangle(np_to_cv(img), top_left_corner[0], bottom_right_corner[0], (0, 255, 0), 2, 8)
         # cv2.imshow("Window", custom_kernel)
 
 
@@ -174,7 +174,10 @@ with mss.mss() as sct:
         imgBlank = np.zeros_like(img)
         # imgStack = stackImages(0.5, ([img, custom_kernel_img, imgCanny],
         #                              [imgFractled, imgContour, imgFiltered]))
-        imgStack = stackImages(0.5, ([img, imgFractled, imgDil]))
+        # imgStack = stackImages(0.5, ([img, imgFractled, imgDil]))
+        imgStack = stackImages(0.5, ([img, imgDil, imgCanny],
+                                     [imgFractled, imgContour, imgFiltered]))
+        # imgStack = stackImages(0.8, ([img, imgContour, imgDil]))
         cv2.imshow("Stack", imgStack)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):

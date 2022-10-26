@@ -5,7 +5,7 @@ import cv2
 import mss
 import numpy as np
 
-from utils.helper_functions import np_array_to_cv_array
+from utils.helper_functions import np_to_cv
 
 top_left_corner = []
 bottom_right_corner = []
@@ -46,7 +46,7 @@ def drawRectangle(action, x, y, flags, *userdata):
 
 # Read Images
 with mss.mss() as sct:
-    image = np_array_to_cv_array(fromScreen())
+    image = np_to_cv(fromScreen())
 # Make a temporary image, will be useful to clear the drawing
 temp = image.copy()
 # Create a named window

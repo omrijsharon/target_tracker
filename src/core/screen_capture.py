@@ -7,11 +7,13 @@ from functools import partial
 # from __future__ import print_function
 import argparse
 
+from utils.helper_functions import np_to_cv
+
 max_lowThreshold = 100
 
 
 def process_frame(frame):
-    cv2.imshow('Edge Map', CannyThreshold(frame))
+    cv2.imshow('Edge Map', np_to_cv(cannyThreshold(frame)))
     # cv2.imshow('frame', frame)
     return cv2.waitKey(1) & 0xFF == ord('q')
 

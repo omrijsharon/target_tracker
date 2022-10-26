@@ -37,13 +37,16 @@ def top_n_regions(regions, n=3):
     #         top_n_regions[0] = region
     # return top_n_regions
 
+
 def yaml_reader(path):
     with open(path) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
     return data
 
-def np_array_to_cv_array(np_array):
+
+def np_to_cv(np_array):
     return np_array.astype(np.uint8)
+
 
 if __name__ == '__main__':
     data = yaml_reader(r'C:\Users\linta\PycharmProjects\target_tracker\src\config\ui_canny_edge_detection.yaml')
