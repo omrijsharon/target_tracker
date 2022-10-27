@@ -94,7 +94,7 @@ def show_frame():
     frame, dimImg = regions_process(canny_frame, base_frame, n_bbox)
     # img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])
     # img = Image.fromarray(canny_frame[:, :]).resize(canny_frame.shape)
-    img = Image.fromarray(dimImg[:, :]).resize(dimImg.shape)
+    img = Image.fromarray(dimImg[:, :]).resize(dimImg.shape[::-1])
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)

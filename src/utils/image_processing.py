@@ -41,8 +41,10 @@ def calc_region_dimension(region, kernel_sizes:tuple):
                                  width + (max_kernel_size - 1)), dtype=np.uint8)
     idx = region.coords - np.array(region.bbox[:2]) + int((max_kernel_size - 1) / 2)
     region_box[tuple(idx.T)] = 1
-    n_ratio = count_pixels_with_dilation(region_box, max_kernel_size) / count_pixels_with_dilation(region_box, min_kernel_size)
-    s_ratio = max_kernel_size / min_kernel_size
+    count_pixels_max_kernel = count_pixels_with_dilation(region_box, max_kernel_size) / max_kernel_size ** 2
+    count_pixels_min_kernel = count_pixels_with_dilation(region_box, min_kernel_size) / min_kernel_size ** 2
+    n_ratio = count_pixels_max_kernel / count_pixels_min_kernel
+    s_ratio = min_kernel_size / max_kernel_size
     dim = np.log(n_ratio) / np.log(s_ratio)
     return dim
 
@@ -58,7 +60,9 @@ def regions_process(mask, frame, n_bbox=3, kernel_size=3):
     dimImg = np.zeros_like(mask, dtype=np.uint8)
     for region in max_area_regions:
         regions_mask[tuple(region.coords.T)] = 1
-        dimImg[tuple(region.coords.T)] = 255 * calc_region_dimension(region, kernel_sizes) / 2
+        region_dim = calc_region_dimension(region, kernel_sizes)
+        # print(region_dim)
+        dimImg[tuple(region.coords.T)] = 255 * (np.clip(region_dim, 1, 2)-1)
         # regions_mask[np.where(labels[0] == region.label)] = 1
     frame = cv2.bitwise_and(frame, frame, mask=regions_mask)
     # for box in bbox:
