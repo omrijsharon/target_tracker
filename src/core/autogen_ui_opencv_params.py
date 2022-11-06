@@ -79,7 +79,7 @@ def canny_process_frame(frame):
     lowThreshold = params.get('lowThreshold')["scale"].get()
     ratio = params.get('ratio')["scale"].get()
     kernel_size = params.get('kernel_size')["scale"].get()
-    frame = cannyThreshold(frame, lowThreshold, ratio, kernel_size)  # LIN - change to general func
+    frame = cannyThreshold(frame, lowThreshold, ratio, kernel_size)
     return frame
 
 

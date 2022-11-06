@@ -54,7 +54,7 @@ def regions_process(mask, frame, n_bbox=3, kernel_size=3):
     # image_label_overlay = (255 * label2rgb(labels[0], image=frame, bg_label=0)).astype(np.uint8)
     regions = measure.regionprops(labels[0])
     max_area_regions = top_n_regions(regions, n_bbox)
-    # bbox = [region.bbox for region in max_area_regions]
+    bbox = [region.bbox for region in max_area_regions] #LIN - NOTE
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
     kernel_sizes = (3, 5)
     dimImg = np.zeros_like(mask, dtype=np.uint8)
@@ -65,6 +65,6 @@ def regions_process(mask, frame, n_bbox=3, kernel_size=3):
         dimImg[tuple(region.coords.T)] = 255 * (np.clip(region_dim, 1, 2)-1)
         # regions_mask[np.where(labels[0] == region.label)] = 1
     frame = cv2.bitwise_and(frame, frame, mask=regions_mask)
-    # for box in bbox:
-    #     cv2.rectangle(frame, (box[1], box[0]), (box[3], box[2]), (0, 255, 0), 2)
+    for box in bbox: #LIN - NOTE
+        cv2.rectangle(frame, (box[1], box[0]), (box[3], box[2]), (0, 255, 0), 2) #LIN - NOTE
     return frame, dimImg
