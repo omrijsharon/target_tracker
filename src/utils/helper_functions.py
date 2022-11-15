@@ -83,6 +83,7 @@ def gray_scale_image(img):
     :param img: colored image
     :return: gray scaled image
     """
+    # d
     return None
 
 
