@@ -29,7 +29,7 @@ def source_change(string):
     else:
         return dir_path(string)
 
-
+# --param_config_path C:\Users\linta\PycharmProjects\target_tracker\src\config\ui_canny_edge_detection.yaml --source screen
 parser = argparse.ArgumentParser(description='Auto generates UI from config file.')
 parser.add_argument('--param_config_path', type=dir_path, help='Path to config params.', default='ui.yaml')
 parser.add_argument('--source', type=source_change, help='Source of video.', default='webcam')
@@ -79,7 +79,7 @@ def canny_process_frame(frame):
     lowThreshold = params.get('lowThreshold')["scale"].get()
     ratio = params.get('ratio')["scale"].get()
     kernel_size = params.get('kernel_size')["scale"].get()
-    frame = cannyThreshold(frame, lowThreshold, ratio, kernel_size)  # LIN - change to general func
+    frame = cannyThreshold(frame, lowThreshold, ratio, kernel_size)
     return frame
 
 
@@ -89,21 +89,23 @@ def format_frame(frame):
 
 def show_frame():
     base_frame = get_frame()
-    canny_frame = 1-canny_process_frame(base_frame)
+    canny_frame = canny_process_frame(base_frame)
     n_bbox = params.get('n_bbox')["scale"].get()
-    frame = regions_process(canny_frame, base_frame, n_bbox)
-    img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])
+    frame, dimImg = regions_process(canny_frame, base_frame, n_bbox)
+    # img = Image.fromarray(frame[:, :, ::-1]).resize(frame.shape[:-1][::-1])
+    # img = Image.fromarray(canny_frame[:, :]).resize(canny_frame.shape)
+    img = Image.fromarray(dimImg[:, :]).resize(dimImg.shape[::-1])
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     # lmain.after(10, show_frame, processed_frame_1)
     lmain.after(10, show_frame)
 
-
-if args.source != 1:
-    show_frame()  # Display
-    root.mainloop()
-else:
-    with mss.mss() as sct:
+if __name__ == '__main__':
+    if args.source != 1:
         show_frame()  # Display
         root.mainloop()
+    else:
+        with mss.mss() as sct:
+            show_frame()  # Display
+            root.mainloop()

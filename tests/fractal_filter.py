@@ -22,3 +22,5 @@ def fractalize(img: np.ndarray, scaling_factors):
 def image_fractal(fractaled_img):
     return (255 * fractaled_img / fractaled_img.max()).astype(np.uint8)
 
+
+
