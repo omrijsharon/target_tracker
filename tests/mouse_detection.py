@@ -43,26 +43,26 @@ def drawRectangle(action, x, y, flags, *userdata):
         cv2.rectangle(image, top_left_corner[0], bottom_right_corner[0], (0, 255, 0), 2, 8)
         cv2.imshow("Window", image)
 
+if __name__ == '__main__':
+    # Read Images
+    with mss.mss() as sct:
+        image = np_to_cv(fromScreen())
+    # Make a temporary image, will be useful to clear the drawing
+    temp = image.copy()
+    # Create a named window
+    cv2.namedWindow("Window")
+    # highgui function called when mouse events occur
+    cv2.setMouseCallback("Window", drawRectangle)
 
-# Read Images
-with mss.mss() as sct:
-    image = np_to_cv(fromScreen())
-# Make a temporary image, will be useful to clear the drawing
-temp = image.copy()
-# Create a named window
-cv2.namedWindow("Window")
-# highgui function called when mouse events occur
-cv2.setMouseCallback("Window", drawRectangle)
-
-k = 0
-# Close the window when key q is pressed
-while k != 113:
-    # Display the image
-    cv2.imshow("Window", image)
-    k = cv2.waitKey(0)
-    # If c is pressed, clear the window, using the dummy image
-    if (k == 99):
-        image = temp.copy()
+    k = 0
+    # Close the window when key q is pressed
+    while k != 113:
+        # Display the image
         cv2.imshow("Window", image)
+        k = cv2.waitKey(0)
+        # If c is pressed, clear the window, using the dummy image
+        if (k == 99):
+            image = temp.copy()
+            cv2.imshow("Window", image)
 
-cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
